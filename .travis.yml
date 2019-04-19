@@ -22,7 +22,7 @@ install:
 jobs:
   include:
     - stage: "Style"
-      name: "Style"
+      name: "Lint"
       script:
         - ng lint
     - stage: "Tests"
@@ -30,6 +30,6 @@ jobs:
       script:
         - npm run test -- --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
     - stage: "Build"
-      name: "Docker"
+      name: "Prod"
       script:
         - ng build --prod --aot
