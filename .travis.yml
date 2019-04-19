@@ -1,0 +1,35 @@
+dist: trusty
+sudo: required
+
+language: node_js
+node_js:
+  - '11'
+
+addons:
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
+
+cache:
+  directories:
+    - ./node_modules
+
+install:
+  - npm install
+
+jobs:
+  include:
+    - stage: "Style"
+      name: "Lint"
+      script:
+        - ng lint
+    - stage: "Tests"
+      name: "Karma"
+      script:
+        - npm run test -- --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
+    - stage: "Build"
+      name: "Prod"
+      script:
+        - ng build --prod --aot
