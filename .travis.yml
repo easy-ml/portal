@@ -1,5 +1,5 @@
 dist: trusty
-sudo: false
+sudo: required
 
 language: node_js
 node_js:
@@ -19,5 +19,17 @@ cache:
 install:
   - npm install
 
-script:
-  - npm run test -- --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
+jobs:
+  include:
+    - stage: "Style"
+      name: "Style"
+      script:
+        - ng lint
+    - stage: "Tests"
+      name: "Karma"
+      script:
+        - npm run test -- --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
+    - stage: "Build"
+      name: "Docker"
+      script:
+        - ng build --prod --aot
