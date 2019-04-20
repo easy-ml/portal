@@ -1,27 +1,49 @@
 <div class="ui middle aligned center aligned grid">
   <div class="column left aligned">
     <h1 class="ui orange header">
-        Easy ML
+      Easy ML
     </h1>
-  
-    <form class="ui form segment orange">
 
-      <div class="field">
-        <label>Username</label>
-        <input type="text" name="username" placeholder="Username">
+    <div #messageBox *ngIf="errorMessage || 
+    (username.touched && username.dirty && username.invalid) || 
+    (password.touched && password.dirty && password.invalid)" class="ui error message">
+      <ng-template [ngIf]="errorMessage">{{errorMessage}}</ng-template>
+      <ul *ngIf="(username.touched && username.dirty && username.invalid) || 
+      (password.touched && password.dirty && password.invalid)" class="list error-list">
+
+        <ng-template [ngIf]="username.touched && username.dirty && username.invalid">
+          <li *ngIf="username.errors.required">
+            Username is required.
+          </li>
+        </ng-template>
+
+        <ng-template [ngIf]="password.touched && password.dirty && password.invalid">
+          <li *ngIf="password.errors.required">
+            Password is required.
+          </li>
+        </ng-template>
+
+      </ul>
+    </div>
+
+    <form [formGroup]="signInForm" (ngSubmit)="signIn()" class="ui form segment orange">
+
+      <div [class.error]="username.touched && username.dirty && username.invalid" class="field">
+        <label for="username">Username</label>
+        <input type="text" formControlName="username" name="username" placeholder="Username">
       </div>
 
-      <div class="field">
-        <label>Password</label>
-        <input type="password" name="password" placeholder="Password">
+      <div [class.error]="password.touched && password.dirty && password.invalid" class="field">
+        <label for="password">Password</label>
+        <input type="password" formControlName="password" name="password" placeholder="Password">
       </div>
-   
-      <button class="ui orange button" type="submit">Sign In</button>
+
+      <button class="ui orange button" [disabled]="signInForm.invalid">Sign In</button>
     </form>
 
     <div class="ui message">
-        <p>During the development, registration isn't available</p>
-      </div>
+      <p>Registration isn't available during development</p>
+    </div>
 
   </div>
 </div>

@@ -10,4 +10,8 @@ export class AuthService {
   isAuthenticated(): boolean {
     return false;
   }
+
+  signIn(username: string, password: string) {
+
+  }
 }
