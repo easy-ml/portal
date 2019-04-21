@@ -38,7 +38,7 @@ export class AuthService {
   }
 
   public isAuthenticated(): boolean {
-    return !this.jwtHelper.isTokenExpired(this.accessToken);
+    return this.accessToken && !this.jwtHelper.isTokenExpired(this.accessToken);
   }
 
   private getHeader() {
@@ -107,7 +107,11 @@ export class AuthService {
   }
 
   set accessToken(accessToken) {
-    localStorage.setItem('access_token', accessToken);
+    if (accessToken) {
+      localStorage.setItem('access_token', accessToken);
+    } else {
+      localStorage.removeItem('access_token');
+    }
   }
 
   get refreshToken(): string | null {
@@ -115,6 +119,10 @@ export class AuthService {
   }
 
   set refreshToken(refreshToken) {
-    localStorage.setItem('refresh_token', refreshToken);
+    if (refreshToken) {
+      localStorage.setItem('refresh_token', refreshToken);
+    } else {
+      localStorage.removeItem('refresh_token');
+    }
   }
 }

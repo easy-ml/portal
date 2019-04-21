@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ApplicationInitStatus } from '@angular/core';
 import { StoreService } from 'src/app/services/store.service';
 import { App } from 'src/app/shared/app.model';
+import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-view',
@@ -8,13 +11,22 @@ import { App } from 'src/app/shared/app.model';
   styleUrls: ['./view.component.styl']
 })
 export class ViewComponent implements OnInit {
-
-  constructor(private storeService: StoreService) { }
+  public applications = new Array<App>();
+  public loaded = false;
+  constructor(private storeService: StoreService, private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
-    this.storeService.getApps().subscribe((apps: App[]) => {
-      console.log(apps);
+    this.storeService.getApps().subscribe(apps => {
+      Object.keys(apps).forEach(k => {
+        this.applications.push(apps[k]);
+      })
+      this.loaded = true
     });
+  }
+
+  signOut() {
+    this.authService.signOut()
+    this.router.navigate(['/sign-in']);
   }
 
 }
