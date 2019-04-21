@@ -29,11 +29,14 @@ export class AuthService {
     }
     // return an observable with a user-facing error message
     return throwError('Something bad happened; please try again later.');
-  };
+  }
 
   public isAuthenticated(): boolean {
-    console.log(this.jwtHelper.isTokenExpired(this.accessToken));
     return !this.jwtHelper.isTokenExpired(this.accessToken);
+  }
+
+  public get roles(): Array<string> {
+    throw new Error("Not implemented");
   }
 
   public signIn(username: string, password: string): Observable<Token> {
@@ -45,6 +48,11 @@ export class AuthService {
         }),
         catchError(this.handleError)
       );
+  }
+
+  public signOut(): void {
+    this.accessToken = null;
+    this.refreshToken = null;
   }
 
   get accessToken(): string | null {

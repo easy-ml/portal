@@ -34,10 +34,6 @@ export class SignInComponent implements OnInit {
             this.errorMessage = error;
         });
     }
-    // const success = true;
-    // if (success) {
-    //   this.router.navigateByUrl(this.redirectUrl);
-    // }
   }
 
   get username() {
