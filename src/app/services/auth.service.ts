@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { retry, catchError, tap } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse, HttpBackend, HttpHeaders } from '@angular/common/http';
+import { retry, catchError, tap, flatMap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 import { Token } from '../shared/token.model';
-import { throwError, Observable } from 'rxjs';
+import { throwError, Observable, forkJoin, using, of } from 'rxjs';
+import { map } from 'rxjs/operators'
 import { environment } from 'src/environments/environment';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +16,11 @@ import { environment } from 'src/environments/environment';
 export class AuthService {
 
   private baseUrl = environment.baseUrl;
+  private jwtHelper: JwtHelperService;
 
-  constructor(private http: HttpClient, private jwtHelper: JwtHelperService) { }
+  constructor(private http: HttpClient) {
+    this.jwtHelper = new JwtHelperService();
+  }
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
@@ -35,8 +41,49 @@ export class AuthService {
     return !this.jwtHelper.isTokenExpired(this.accessToken);
   }
 
+  private getHeader() {
+    return new HttpHeaders({ 'Authorization': 'Bearer ' + this.accessToken });
+  }
+
+  public getAuthorizationHeader(): Observable<HttpHeaders> {
+    if (this.accessToken) {
+      if (!this.jwtHelper.isTokenExpired(this.accessToken)) {
+        return of(this.getHeader());
+      }
+      if (!this.jwtHelper.isTokenExpired()) {
+        return this.refresh().pipe(map(_ => this.getHeader()));
+      };
+      this.signOut();
+    }
+    return throwError('Not authorized');
+  }
+
+  public isAuthenticatedExtended() {
+    if (!this.accessToken) {
+      return of(false);
+    }
+    if (!this.jwtHelper.isTokenExpired(this.accessToken)) {
+      return of(true);
+    }
+    if (this.jwtHelper.isTokenExpired(this.refreshToken)) {
+      this.signOut();
+      return of(false);
+    }
+    return this.refresh().pipe(map(_ => this.isAuthenticated()));
+  }
+
+  private refresh(): Observable<Token> {
+    const refreshHeader = new HttpHeaders({ 'Authorization': 'Bearer ' + this.refreshToken });
+    return this.http.post<Token>(this.baseUrl + '/auth/refresh', null, { headers: refreshHeader }).pipe(
+      tap(x => {
+        this.accessToken = x.access_token;
+      }),
+      catchError(this.handleError)
+    );
+  }
+
   public get roles(): Array<string> {
-    throw new Error("Not implemented");
+    throw new Error('Method not implemented.');
   }
 
   public signIn(username: string, password: string): Observable<Token> {
