@@ -13,9 +13,9 @@ export class StoreService {
   private baseUrl = environment.baseUrl;
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  public getApps(): Observable<Array<App>> {
+  public getApps(): Observable<{count: number, items: App[]}> {
     return this.authService.getAuthorizationHeader().pipe(flatMap(headers => {
-      return this.http.get<Array<App>>(this.baseUrl + '/apps', { headers: headers });
+      return this.http.get<{count: number, items: App[]}>(this.baseUrl + '/apps', { headers: headers });
     }));
   }
 }

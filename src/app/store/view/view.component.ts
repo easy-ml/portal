@@ -17,9 +17,7 @@ export class ViewComponent implements OnInit {
 
   ngOnInit() {
     this.storeService.getApps().subscribe(apps => {
-      Object.keys(apps).forEach(k => {
-        this.applications.push(apps[k]);
-      })
+      this.applications.push(...apps.items);
       this.loaded = true
     });
   }
