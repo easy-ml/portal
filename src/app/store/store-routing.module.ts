@@ -2,16 +2,17 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ViewComponent } from './view/view.component';
 import { AuthGuard } from '../guards/auth.guard';
+import { AppComponent } from './app/app.component';
 
 const routes: Routes = [
   {
+    path: 'store/:id',
+    component: AppComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'store',
     component: ViewComponent,
-    // children: [
-    //   { path: '', redirectTo: 'home', pathMatch: 'full' },
-    //   { path: 'home', component: HomeComponent},
-    //   { path: 'admin', component: AdminComponent}
-    // ]
     canActivate: [AuthGuard]
   }
 ];

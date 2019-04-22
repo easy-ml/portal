@@ -18,4 +18,10 @@ export class StoreService {
       return this.http.get<{count: number, items: App[]}>(this.baseUrl + '/apps', { headers: headers });
     }));
   }
+
+  public getApp(id: string): Observable<App> {
+    return this.authService.getAuthorizationHeader().pipe(flatMap(headers => {
+      return this.http.get<App>(this.baseUrl + '/apps/' + id, {headers: headers});
+    }));
+  }
 }

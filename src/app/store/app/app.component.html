@@ -1,0 +1,91 @@
+<div class="ui main text container">
+  <ng-template [ngIf]="loaded" [ngIfElse]="loading">
+    <h1 class="ui header">{{app.title}}
+      <div *ngIf="app.authors" class="sub header">{{'@' + app.authors[0].username}}</div>
+    </h1>
+    <div class="ui grid">
+      <div class="twelve wide column">
+        <img class="ui fluid rounded image" src="{{app.cover}}" />
+      </div>
+      <div class="four wide column center aligned">
+        <div class="ui fullheighted grid">
+
+          <div class="centered row">
+            <div class="ui statistic">
+              <div class="value">
+                {{app.statistics.downloads.length}}
+              </div>
+              <div class="label">
+                Downloads
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom aligned row paddingless">
+            <div class="column">
+              <a class="ui green massive label price">{{'Free'}}</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="ui horizontal divider">Description</div>
+    <p>{{app.description}}</p>
+
+    <div class="ui horizontal divider">Submissions</div>
+    <input class="hidden" type="file" (change)="upload($event.target.files)" #file>
+    <button class="fluid ui primary button" (click)="file.click()">Upload</button>
+    <div class="ui blue segment">
+
+      <div class="ui middle aligned divided list">
+        <div class="item">
+          <div class="right floated content">
+            <div class="ui mini basic icon buttons">
+
+              <button class="ui button disabled">03.02.04</button>
+              <button class="ui button"><i class="file icon"></i></button>
+              <button class="ui button"><i class="download icon"></i></button>
+            </div>
+          </div>
+
+          <div class="content">
+
+            <div class="header">Submission 23</div>
+
+            <div class="description">
+              File info
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #loading>
+
+    <div class="ui placeholder">
+      <div class="header">
+        <div class="line"></div>
+      </div>
+      <div class="paragraph">
+          <div class="line"></div>
+      </div>
+      <div class="ui placeholder">
+      <div class="rectangular image"></div>
+      </div>
+      <div class="paragraph">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+      </div>
+
+    </div>
+
+
+  </ng-template>
+</div>

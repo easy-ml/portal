@@ -10,4 +10,5 @@ export class App {
     title: string;
     description: string;
     cover: string;
+    _id: string;
 }

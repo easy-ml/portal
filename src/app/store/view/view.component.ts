@@ -27,4 +27,8 @@ export class ViewComponent implements OnInit {
     this.router.navigate(['/sign-in']);
   }
 
+  moreButtonClick(app: App) {
+    console.log(app);
+    this.router.navigate(['/store/' + app._id]);
+  }
 }

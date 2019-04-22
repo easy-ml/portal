@@ -18,7 +18,7 @@
       <img class="ui fluid rounded image" src="{{app.cover}}" />
       <div class="ui hidden divider"></div>
       <p>{{app.description.length > 200 ? (app.description | slice:0:200-3) + '...' : app.description}}</p>
-      <button class="fluid ui button">More</button>
+      <button class="fluid ui button" (click)="moreButtonClick(app)">More</button>
     </div>
   </div>
 </div>
