@@ -50,7 +50,7 @@ export class AuthService {
       if (!this.jwtHelper.isTokenExpired(this.accessToken)) {
         return of(this.getHeader());
       }
-      if (!this.jwtHelper.isTokenExpired()) {
+      if (!this.jwtHelper.isTokenExpired(this.refreshToken)) {
         return this.refresh().pipe(map(_ => this.getHeader()));
       };
       this.signOut();

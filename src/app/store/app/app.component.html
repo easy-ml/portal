@@ -10,7 +10,7 @@
       <div class="four wide column center aligned">
         <div class="ui fullheighted grid">
 
-          <div class="centered row">
+          <!-- <div class="centered row">
             <div class="ui statistic">
               <div class="value">
                 {{app.statistics.downloads.length}}
@@ -19,7 +19,7 @@
                 Downloads
               </div>
             </div>
-          </div>
+          </div> -->
 
           <div class="bottom aligned row paddingless">
             <div class="column">
@@ -36,25 +36,30 @@
     <div class="ui horizontal divider">Submissions</div>
     <input class="hidden" type="file" (change)="upload($event.target.files)" #file>
     <button class="fluid ui primary button" (click)="file.click()">Upload</button>
-    <div class="ui blue segment">
+    <div *ngIf="submissions.length > 0" class="ui blue segment">
 
       <div class="ui middle aligned divided list">
-        <div class="item">
+        <div *ngFor="let submission of submissions" class="item">
           <div class="right floated content">
-            <div class="ui mini basic icon buttons">
-
-              <button class="ui button disabled">03.02.04</button>
-              <button class="ui button"><i class="file icon"></i></button>
-              <button class="ui button"><i class="download icon"></i></button>
+            <div class="">
+              <button class="ui mini icon basic button disabled">{{submission.date}}</button>
+              <!-- <button class="ui button"><i class="file icon"></i></button> -->
+              <button *ngIf="(submission.response != null) ? !submission.response.error : true; else errorButton"
+                [class.loading]="submission.response == null" (click)="downloadButtonClick(submission)" class="ui mini icon basic button">
+                <i class="download icon"></i> Download
+              </button>
+              <ng-template #errorButton>
+                <button class="ui mini button negative" (click)="errorButtonClick(submission)">Error</button>
+              </ng-template>
             </div>
           </div>
 
           <div class="content">
 
-            <div class="header">Submission 23</div>
+            <div class="header">Submission</div>
 
             <div class="description">
-              File info
+              {{submission.filename}}
             </div>
 
           </div>
@@ -71,10 +76,10 @@
         <div class="line"></div>
       </div>
       <div class="paragraph">
-          <div class="line"></div>
+        <div class="line"></div>
       </div>
       <div class="ui placeholder">
-      <div class="rectangular image"></div>
+        <div class="rectangular image"></div>
       </div>
       <div class="paragraph">
         <div class="line"></div>
