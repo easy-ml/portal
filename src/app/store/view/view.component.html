@@ -1,19 +1,11 @@
-<div class="ui stackable container menu">
-  <div class="item">
-    <img src="assets/images/logo.png">
-  </div>
-
-  <div class="right menu">
-    <a class="item" (click)="signOut()">Sign Out</a>
-  </div>
-</div>
+<app-menu></app-menu>
 
 <div [class.loading]="!loaded" class="items doubling stackable basic segment three column ui grid container">
   <div *ngFor="let app of applications" class="ui column ">
     <div class="ui segment ">
       <h2 class="ui orange header">
         {{app.title}}
-          <div class="sub header">@{{app.authors[0].username}}</div>
+        <div class="sub header">@{{app.authors[0].username}}</div>
       </h2>
       <img class="ui fluid rounded image" src="{{app.cover}}" />
       <div class="ui hidden divider"></div>
@@ -21,4 +13,84 @@
       <button class="fluid ui button" (click)="moreButtonClick(app)">More</button>
     </div>
   </div>
+  <div *ngIf="loaded" class="ui column">
+    <div class="ui segment placeholder">
+      <div class="ui icon header">
+        <i class="terminal icon"></i>
+        You can publish your own app
+      </div>
+      <div class="inline">
+        <div class="ui primary button" (click)="addButtonClick()">Publish</div>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+
+<form [formGroup]="form" (ngSubmit)="publish()" class="ui form modal">
+  <!-- <i class="close icon"></i> -->
+
+  <div class="header">
+    Publish application
+  </div>
+
+
+  <div class="content">
+    
+    <div class="fluid field">
+      <label>Title</label>
+      <input formControlName="title" type="text">
+    </div>
+
+    <div class="fluid field">
+      <label>Description</label>
+      <textarea formControlName="description" rows="2"></textarea>
+    </div>
+
+    <div class="ui fluid field">
+      <label>Image</label>
+      <div [class.left]="imageUploading" [class.icon]="imageUploading" [class.loading]="imageUploading" class="ui action input fluid">
+        <input class="hidden" type="file" (change)="uploadImageFromDisk($event.target.files)" accept="image/*"
+          #imageFile>
+        <input type="text" formControlName="image" readonly>
+        <i *ngIf="imageUploading" class="search icon"></i>
+        <div (click)="imageFile.click()" class="ui blue right labeled icon button">
+          <i class="image icon"></i>
+          Upload
+        </div>
+      </div>
+    </div>
+
+    <div class="ui fluid field">
+      <label>Application</label>
+      <div [class.left]="appUploading" [class.icon]="appUploading" [class.loading]="appUploading" class="ui action input fluid">
+        <input class="hidden" type="file" (change)="uploadAppFromDisk($event.target.files)" accept=".zip" #appFile>
+        <input type="text" formControlName="app" readonly>
+        <i *ngIf="appUploading" class="search icon"></i>
+        <div (click)="appFile.click()" class="ui blue right labeled icon button">
+          <i class="file icon"></i>
+          Upload
+        </div>
+      </div>
+    </div>
+    
+    <div class="ui visible warning message">
+      Fill all fields to publish application
+    </div>
+  </div>
+  
+  <div class="actions">
+
+    <div class="ui black deny button">
+      Cancel
+    </div>
+
+    <button [disabled]="form.invalid" class="ui positive right labeled icon button">
+      Publish
+      <i class="checkmark icon"></i>
+    </button>
+
+  </div>
+
+</form>

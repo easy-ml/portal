@@ -1,3 +1,5 @@
+<app-menu></app-menu>
+
 <div class="ui main text container">
   <ng-template [ngIf]="loaded" [ngIfElse]="loading">
     <h1 class="ui header">{{app.title}}
@@ -41,16 +43,21 @@
       <div class="ui middle aligned divided list">
         <div *ngFor="let submission of submissions" class="item">
           <div class="right floated content">
-            <div class="">
-              <button class="ui mini icon basic button disabled">{{submission.date}}</button>
+            <div>
+
+              <button class="ui mini icon basic button disabled">{{submission.date | date:'short'}}</button>
+
               <!-- <button class="ui button"><i class="file icon"></i></button> -->
+
               <button *ngIf="(submission.response != null) ? !submission.response.error : true; else errorButton"
-                [class.loading]="submission.response == null" (click)="downloadButtonClick(submission)" class="ui mini icon basic button">
+                [class.loading]="submission.response == null" [disabled]="submission.response == null"
+                (click)="downloadButtonClick(submission)" class="ui mini icon basic button">
                 <i class="download icon"></i> Download
               </button>
               <ng-template #errorButton>
                 <button class="ui mini button negative" (click)="errorButtonClick(submission)">Error</button>
               </ng-template>
+
             </div>
           </div>
 
